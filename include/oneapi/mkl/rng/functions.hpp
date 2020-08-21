@@ -40,8 +40,9 @@ namespace rng {
 //
 // Output parameters:
 //      cl::sycl::buffer<typename Distr::result_type, 1>& r - cl::sycl::buffer to the output vector
-template<typename Distr, typename Engine>
-static inline void generate(const Distr& distr, Engine& engine, std::int64_t n, sycl::buffer<typename Distr::result_type, 1>& r) {
+template <typename Distr, typename Engine>
+static inline void generate(const Distr& distr, Engine& engine, std::int64_t n,
+                            sycl::buffer<typename Distr::result_type, 1>& r) {
     generate_precondition(distr, engine, n, r);
     engine.pimpl_->generate(distr, n, r);
 }
@@ -61,13 +62,13 @@ static inline void generate(const Distr& distr, Engine& engine, std::int64_t n, 
 //
 // Returns:
 //      cl::sycl::event - event for the submitted to the engine's queue task
-template<typename Distr, typename Engine>
-static inline cl::sycl::event generate(const Distr& distr, Engine& engine, std::int64_t n, typename Distr::result_type* r,
-              const cl::sycl::vector_class<cl::sycl::event>& dependencies = {}) {
+template <typename Distr, typename Engine>
+static inline cl::sycl::event generate(
+    const Distr& distr, Engine& engine, std::int64_t n, typename Distr::result_type* r,
+    const cl::sycl::vector_class<cl::sycl::event>& dependencies = {}) {
     generate_precondition(distr, engine, n, r, dependencies);
     return engine.pimpl_->generate(distr, n, r, dependencies);
 }
-
 
 //  SERVICE FUNCTIONS
 
@@ -78,7 +79,7 @@ static inline cl::sycl::event generate(const Distr& distr, Engine& engine, std::
 // Input parameters:
 //      Engine& engine             - engine object
 //      const std::int64_t num_to_skip - number of skipped elements
-template<typename Engine>
+template <typename Engine>
 static inline void skip_ahead(Engine& engine, std::uint64_t num_to_skip) {
     engine.pimpl_->skip_ahead(num_to_skip);
 }
@@ -90,9 +91,9 @@ static inline void skip_ahead(Engine& engine, std::uint64_t num_to_skip) {
 // Input parameters:
 //      Engine& engine                               - engine object
 //      std::initializer_list<std::uint64_t> num_to_skip - number of skipped elements
-template<typename Engine>
+template <typename Engine>
 static inline void skip_ahead(Engine& engine, std::initializer_list<std::uint64_t> num_to_skip) {
-   // TO DO: add static assert for supported engines
+    // TO DO: add static assert for supported engines
     engine.pimpl_->skip_ahead(num_to_skip);
 }
 
@@ -104,7 +105,7 @@ static inline void skip_ahead(Engine& engine, std::initializer_list<std::uint64_
 //      Engine& engine  - engine object
 //      std::uint64_t idx    - index of the computational node
 //      std::uint64_t stride - largest number of computational nodes, or stride
-template<typename Engine>
+template <typename Engine>
 static inline void leapfrog(Engine& engine, std::uint64_t idx, std::uint64_t stride) {
     // TO DO: add static assert for supported engines
     engine.pimpl_->leapfrog(idx, stride);

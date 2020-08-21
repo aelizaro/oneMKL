@@ -26,20 +26,21 @@
 namespace oneapi {
 namespace mkl {
 
-template<backend Backend>
+template <backend Backend>
 class backend_selector {
 public:
     explicit backend_selector(sycl::queue queue) : queue_(queue) {
-    // TO DO: add check for queue type, like:
-    //    if constexpr(Backend == backend::mklcpu) {
-    //        if(!(queue.is_host() || queue.get_device().is_cpu())) {
-    //            throw UnsupportedBackendException(queue, "invalid queue in backend_selector");
-    //        }
-    //    }
+        // TO DO: add check for queue type, like:
+        //    if constexpr(Backend == backend::mklcpu) {
+        //        if(!(queue.is_host() || queue.get_device().is_cpu())) {
+        //            throw UnsupportedBackendException(queue, "invalid queue in backend_selector");
+        //        }
+        //    }
     }
     sycl::queue& get_queue() {
         return queue_;
     }
+
 private:
     sycl::queue queue_;
 };

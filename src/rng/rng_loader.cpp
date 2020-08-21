@@ -30,12 +30,12 @@ namespace detail {
 static oneapi::mkl::detail::table_initializer<domain::rng, function_table_t> function_tables;
 
 engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue,
-                                                                std::uint64_t seed) {
+                                  std::uint64_t seed) {
     return function_tables[libkey].create_philox4x32x10_sycl(queue, seed);
 }
 
 engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue,
-                                                                std::initializer_list<std::uint64_t> seed) {
+                                  std::initializer_list<std::uint64_t> seed) {
     return function_tables[libkey].create_philox4x32x10_ex_sycl(queue, seed);
 }
 

@@ -33,11 +33,14 @@ namespace mkl {
 namespace rng {
 namespace detail {
 
-ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue, std::uint64_t seed);
+ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue,
+                                                std::uint64_t seed);
 
-ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed);
+ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue queue,
+                                                std::initializer_list<std::uint64_t> seed);
 
-ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, const engine_impl& other);
+ONEMKL_EXPORT engine_impl* create_philox4x32x10(oneapi::mkl::device libkey,
+                                                const engine_impl& other);
 
 } // namespace detail
 } // namespace rng

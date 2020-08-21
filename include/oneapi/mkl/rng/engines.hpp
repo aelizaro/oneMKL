@@ -51,30 +51,33 @@ class philox4x32x10 {
 public:
     static constexpr std::uint64_t default_seed = 0;
 
-    philox4x32x10(sycl::queue queue, std::uint64_t seed = default_seed) :
-        pimpl_(detail::create_philox4x32x10(get_device_id(queue), queue, seed)) {}
+    philox4x32x10(sycl::queue queue, std::uint64_t seed = default_seed)
+            : pimpl_(detail::create_philox4x32x10(get_device_id(queue), queue, seed)) {}
 
-    philox4x32x10(sycl::queue queue, std::initializer_list<std::uint64_t> seed) :
-        pimpl_(detail::create_philox4x32x10(get_device_id(queue), queue, seed)) {}
+    philox4x32x10(sycl::queue queue, std::initializer_list<std::uint64_t> seed)
+            : pimpl_(detail::create_philox4x32x10(get_device_id(queue), queue, seed)) {}
 
-    #ifdef ENABLE_MKLCPU_BACKEND
-    philox4x32x10(backend_selector<backend::mklcpu> selector, std::uint64_t seed = default_seed) :
-        pimpl_(mklcpu::create_philox4x32x10(selector.get_queue(), seed)) {}
+#ifdef ENABLE_MKLCPU_BACKEND
+    philox4x32x10(backend_selector<backend::mklcpu> selector, std::uint64_t seed = default_seed)
+            : pimpl_(mklcpu::create_philox4x32x10(selector.get_queue(), seed)) {}
 
-    philox4x32x10(backend_selector<backend::mklcpu> selector, std::initializer_list<std::uint64_t> seed) :
-        pimpl_(mklcpu::create_philox4x32x10(selector.get_queue(), seed)) {}
-    #endif
+    philox4x32x10(backend_selector<backend::mklcpu> selector,
+                  std::initializer_list<std::uint64_t> seed)
+            : pimpl_(mklcpu::create_philox4x32x10(selector.get_queue(), seed)) {}
+#endif
 
-    #ifdef ENABLE_MKLGPU_BACKEND
-    philox4x32x10(backend_selector<backend::mklgpu> selector, std::uint64_t seed = default_seed) :
-        pimpl_(mklgpu::create_philox4x32x10(selector.get_queue(), seed)) {}
+#ifdef ENABLE_MKLGPU_BACKEND
+    philox4x32x10(backend_selector<backend::mklgpu> selector, std::uint64_t seed = default_seed)
+            : pimpl_(mklgpu::create_philox4x32x10(selector.get_queue(), seed)) {}
 
-    philox4x32x10(backend_selector<backend::mklgpu> selector, std::initializer_list<std::uint64_t> seed) :
-        pimpl_(mklgpu::create_philox4x32x10(selector.get_queue(), seed)) {}
-    #endif
+    philox4x32x10(backend_selector<backend::mklgpu> selector,
+                  std::initializer_list<std::uint64_t> seed)
+            : pimpl_(mklgpu::create_philox4x32x10(selector.get_queue(), seed)) {}
+#endif
 
     philox4x32x10(const philox4x32x10& other) {
-        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()), *(other.pimpl_.get())));
+        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()),
+                                                  *(other.pimpl_.get())));
     }
 
     philox4x32x10(philox4x32x10&& other) {
@@ -82,13 +85,16 @@ public:
     }
 
     philox4x32x10& operator=(const philox4x32x10& other) {
-        if(this == &other) return *this;
-        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()), *(other.pimpl_.get())));
+        if (this == &other)
+            return *this;
+        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()),
+                                                  *(other.pimpl_.get())));
         return *this;
     }
 
     philox4x32x10& operator=(philox4x32x10&& other) {
-        if(this == &other) return *this;
+        if (this == &other)
+            return *this;
         pimpl_ = std::move(other.pimpl_);
         return *this;
     }
@@ -96,20 +102,20 @@ public:
 private:
     std::unique_ptr<detail::engine_impl> pimpl_;
 
-    template<typename Engine>
+    template <typename Engine>
     friend void skip_ahead(Engine& engine, std::uint64_t num_to_skip);
 
-    template<typename Engine>
+    template <typename Engine>
     friend void skip_ahead(Engine& engine, std::initializer_list<std::uint64_t> num_to_skip);
 
-    template<typename Distr, typename Engine>
+    template <typename Distr, typename Engine>
     friend void generate(const Distr& distr, Engine& engine, std::int64_t n,
-        sycl::buffer<typename Distr::result_type, 1>& r);
+                         sycl::buffer<typename Distr::result_type, 1>& r);
 
-    template<typename Distr, typename Engine>
-    friend sycl::event generate(const Distr& distr, Engine& engine,
-        std::int64_t n, typename Distr::result_type* r,
-        const sycl::vector_class<sycl::event>& dependencies);
+    template <typename Distr, typename Engine>
+    friend sycl::event generate(const Distr& distr, Engine& engine, std::int64_t n,
+                                typename Distr::result_type* r,
+                                const sycl::vector_class<sycl::event>& dependencies);
 };
 
 } // namespace rng

@@ -31,11 +31,14 @@ namespace mkl {
 namespace rng {
 namespace mklcpu {
 
-ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue, std::uint64_t seed);
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue,
+                                                                          std::uint64_t seed);
 
-ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed);
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+    cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed);
 
-ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(const oneapi::mkl::rng::detail::engine_impl& other);
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+    const oneapi::mkl::rng::detail::engine_impl& other);
 
 } // namespace mklcpu
 } // namespace rng

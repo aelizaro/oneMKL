@@ -48,22 +48,21 @@ namespace rng {
 //      b - right bound. 1.0 by default (std::numeric_limits<std::int32_t>::max() for std::int32_t)
 
 namespace uniform_method {
-struct standard{};
-struct accurate{};
+struct standard {};
+struct accurate {};
 using by_default = standard;
-}
+} // namespace uniform_method
 
-template<typename Type = float, typename Method = uniform_method::by_default>
+template <typename Type = float, typename Method = uniform_method::by_default>
 class uniform {
 public:
     static_assert(std::is_same<Method, uniform_method::standard>::value ||
-                (std::is_same<Method, uniform_method::accurate>::value &&
-            !std::is_same<Type, std::int32_t>::value),
-        "oneapi::mkl::rng::error distribution method is incorrect");
+                      (std::is_same<Method, uniform_method::accurate>::value &&
+                       !std::is_same<Type, std::int32_t>::value),
+                  "oneapi::mkl::rng::error distribution method is incorrect");
 
-    static_assert(std::is_same<Type, float>::value ||
-        std::is_same<Type, double>::value,
-        "oneapi::mkl::rng::error distribution type is not supported");
+    static_assert(std::is_same<Type, float>::value || std::is_same<Type, double>::value,
+                  "oneapi::mkl::rng::error distribution type is not supported");
 
     using method_type = Method;
     using result_type = Type;
@@ -71,8 +70,9 @@ public:
     uniform() : uniform(static_cast<Type>(0.0f), static_cast<Type>(1.0f)) {}
 
     explicit uniform(Type a, Type b) : a_(a), b_(b) {
-        if(a >= b) {
-            throw oneapi::mkl::InvalidArgumentsException("uniform distribution parameters are incorrect, a >= b");
+        if (a >= b) {
+            throw oneapi::mkl::InvalidArgumentsException(
+                "uniform distribution parameters are incorrect, a >= b");
         }
     }
 
@@ -83,12 +83,13 @@ public:
     Type b() const {
         return b_;
     }
+
 private:
     Type a_;
     Type b_;
 };
 
-template<typename Method>
+template <typename Method>
 class uniform<std::int32_t, Method> {
 public:
     using method_type = Method;
@@ -97,8 +98,9 @@ public:
     uniform() : uniform(0, std::numeric_limits<std::int32_t>::max()) {}
 
     explicit uniform(std::int32_t a, std::int32_t b) : a_(a), b_(b) {
-        if(a >= b) {
-            throw oneapi::mkl::InvalidArgumentsException("uniform distribution parameters are incorrect, a >= b");
+        if (a >= b) {
+            throw oneapi::mkl::InvalidArgumentsException(
+                "uniform distribution parameters are incorrect, a >= b");
         }
     }
 
@@ -109,16 +111,17 @@ public:
     std::int32_t b() const {
         return b_;
     }
+
 private:
     std::int32_t a_;
     std::int32_t b_;
 };
 
-template<typename UIntType = std::uint32_t>
+template <typename UIntType = std::uint32_t>
 class bits {
 public:
     static_assert(std::is_same<UIntType, std::uint32_t>::value,
-        "oneapi::mkl::rng::error distribution type is not supported");
+                  "oneapi::mkl::rng::error distribution type is not supported");
     using result_type = UIntType;
 };
 

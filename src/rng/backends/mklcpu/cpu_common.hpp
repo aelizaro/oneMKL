@@ -44,7 +44,7 @@ static inline void host_task(H &cgh, F f) {
     (void)host_task_internal<K>(cgh, f, 0);
 }
 
-template<typename Engine, typename Distr>
+template <typename Engine, typename Distr>
 class kernel_name {};
 
 } // namespace mklcpu

@@ -39,11 +39,14 @@ public:
 
     engine_impl(const engine_impl& other) : queue_(other.queue_) {}
 
-    virtual void generate(const uniform<float, uniform_method::standard>& distr, std::int64_t n, cl::sycl::buffer<float, 1> r) = 0;
+    virtual void generate(const uniform<float, uniform_method::standard>& distr, std::int64_t n,
+                          cl::sycl::buffer<float, 1> r) = 0;
 
-    virtual void generate(const uniform<double, uniform_method::standard>& distr, std::int64_t n, cl::sycl::buffer<double, 1> r) = 0;
+    virtual void generate(const uniform<double, uniform_method::standard>& distr, std::int64_t n,
+                          cl::sycl::buffer<double, 1> r) = 0;
 
-    virtual void generate(const bits<std::uint32_t>& distr, std::int64_t n, cl::sycl::buffer<std::uint32_t, 1> r) = 0;
+    virtual void generate(const bits<std::uint32_t>& distr, std::int64_t n,
+                          cl::sycl::buffer<std::uint32_t, 1> r) = 0;
 
     virtual void skip_ahead(std::uint64_t num_to_skip) = 0;
 
@@ -56,6 +59,7 @@ public:
     cl::sycl::queue& get_queue() {
         return queue_;
     }
+
 protected:
     cl::sycl::queue queue_;
 };

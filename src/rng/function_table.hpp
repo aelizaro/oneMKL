@@ -28,9 +28,12 @@
 typedef struct {
     int version;
 
-    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_sycl)(cl::sycl::queue queue, std::uint64_t seed);
-    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_ex_sycl)(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed);
-    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_copy_sycl)(const oneapi::mkl::rng::detail::engine_impl& other);
+    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_sycl)(cl::sycl::queue queue,
+                                                                        std::uint64_t seed);
+    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_ex_sycl)(
+        cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed);
+    oneapi::mkl::rng::detail::engine_impl* (*create_philox4x32x10_copy_sycl)(
+        const oneapi::mkl::rng::detail::engine_impl& other);
 } function_table_t;
 
 #endif //_RNG_FUNCTION_TABLE_HPP_

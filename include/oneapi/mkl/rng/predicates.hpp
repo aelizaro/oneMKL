@@ -32,11 +32,11 @@ namespace rng {
 
 // Buffer APIs
 
-template<typename Distr, typename Engine>
+template <typename Distr, typename Engine>
 inline void generate_precondition(const Distr& distr, Engine& engine, std::int64_t n,
-                sycl::buffer<typename Distr::result_type, 1>& r) {
+                                  sycl::buffer<typename Distr::result_type, 1>& r) {
 #ifndef ONEMKL_DISABLE_PREDICATES
-    if(n < 0 || n > r.get_count()) {
+    if (n < 0 || n > r.get_count()) {
         throw oneapi::mkl::InvalidArgumentsException("invalid argument n");
     }
 #endif
@@ -44,14 +44,15 @@ inline void generate_precondition(const Distr& distr, Engine& engine, std::int64
 
 // USM APIs
 
-template<typename Distr, typename Engine>
+template <typename Distr, typename Engine>
 inline void generate_precondition(const Distr& distr, Engine& engine, std::int64_t n,
-            typename Distr::result_type* r, const cl::sycl::vector_class<cl::sycl::event>& dependencies) {
+                                  typename Distr::result_type* r,
+                                  const cl::sycl::vector_class<cl::sycl::event>& dependencies) {
 #ifndef ONEMKL_DISABLE_PREDICATES
-    if(n < 0) {
+    if (n < 0) {
         throw oneapi::mkl::InvalidArgumentsException("invalid argument n");
     }
-    if(r == nullptr) {
+    if (r == nullptr) {
         throw oneapi::mkl::InvalidArgumentsException("invalid argument r");
     }
 #endif

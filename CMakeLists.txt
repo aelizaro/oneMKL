@@ -54,7 +54,6 @@ option(BUILD_DOC "" OFF)
 # Set compilation flags
 if(UNIX)
   set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_FLAGS "-g")
 else()
   set(CMAKE_CXX_STANDARD 14)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-function")

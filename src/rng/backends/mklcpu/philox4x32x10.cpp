@@ -34,42 +34,48 @@ namespace mklcpu {
 
 class philox4x32x10_impl : public oneapi::mkl::rng::detail::engine_impl {
 public:
-    philox4x32x10_impl(cl::sycl::queue queue, std::uint64_t seed) : oneapi::mkl::rng::detail::engine_impl(queue) {
+    philox4x32x10_impl(cl::sycl::queue queue, std::uint64_t seed)
+            : oneapi::mkl::rng::detail::engine_impl(queue) {
         vslNewStreamEx(&stream_, VSL_BRNG_PHILOX4X32X10, 2, reinterpret_cast<uint32_t*>(&seed));
     }
 
-    philox4x32x10_impl(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed) : oneapi::mkl::rng::detail::engine_impl(queue) {
-        vslNewStreamEx(&stream_, VSL_BRNG_PHILOX4X32X10, 2 * seed.size(), (std::uint32_t*)(seed.begin()));
+    philox4x32x10_impl(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed)
+            : oneapi::mkl::rng::detail::engine_impl(queue) {
+        vslNewStreamEx(&stream_, VSL_BRNG_PHILOX4X32X10, 2 * seed.size(),
+                       (std::uint32_t*)(seed.begin()));
     }
 
-    philox4x32x10_impl(const philox4x32x10_impl* other) : oneapi::mkl::rng::detail::engine_impl(*other) {
+    philox4x32x10_impl(const philox4x32x10_impl* other)
+            : oneapi::mkl::rng::detail::engine_impl(*other) {
         vslCopyStream(&stream_, other->stream_);
     }
 
-    virtual void generate(const uniform<float, uniform_method::standard>& distr, std::int64_t n, cl::sycl::buffer<float, 1> r) override {
-        queue_.submit([&](sycl::handler & cgh) {
+    virtual void generate(const uniform<float, uniform_method::standard>& distr, std::int64_t n,
+                          cl::sycl::buffer<float, 1> r) override {
+        queue_.submit([&](sycl::handler& cgh) {
             auto acc_r = r.get_access<sycl::access::mode::write>(cgh);
-            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(cgh, [=](){
+            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(cgh, [=]() {
                 vsRngUniform(0, stream_, n, acc_r.get_pointer(), distr.a(), distr.b());
             });
         });
     }
 
-    virtual void generate(const uniform<double, uniform_method::standard>& distr, std::int64_t n, cl::sycl::buffer<double, 1> r) override {
-        queue_.submit([&](sycl::handler & cgh) {
+    virtual void generate(const uniform<double, uniform_method::standard>& distr, std::int64_t n,
+                          cl::sycl::buffer<double, 1> r) override {
+        queue_.submit([&](sycl::handler& cgh) {
             auto acc_r = r.get_access<sycl::access::mode::write>(cgh);
-            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(cgh, [=](){
+            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(cgh, [=]() {
                 vdRngUniform(0, stream_, n, acc_r.get_pointer(), distr.a(), distr.b());
             });
         });
     }
 
-    virtual void generate(const bits<std::uint32_t>& distr, std::int64_t n, cl::sycl::buffer<std::uint32_t, 1> r) override {
-        queue_.submit([&](sycl::handler & cgh) {
+    virtual void generate(const bits<std::uint32_t>& distr, std::int64_t n,
+                          cl::sycl::buffer<std::uint32_t, 1> r) override {
+        queue_.submit([&](sycl::handler& cgh) {
             auto acc_r = r.get_access<sycl::access::mode::write>(cgh);
-            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(cgh, [=](){
-                viRngUniformBits(0, stream_, n, acc_r.get_pointer());
-            });
+            host_task<kernel_name<philox4x32x10_impl, decltype(distr)>>(
+                cgh, [=]() { viRngUniformBits(0, stream_, n, acc_r.get_pointer()); });
         });
     }
 
@@ -82,25 +88,30 @@ public:
     }
 
     virtual void leapfrog(std::uint64_t idx, std::uint64_t stride) override {
-        throw oneapi::mkl::InvalidArgumentsException("leapfrog is not supported for philox4x32x10 engine");
+        throw oneapi::mkl::InvalidArgumentsException(
+            "leapfrog is not supported for philox4x32x10 engine");
     }
 
     virtual ~philox4x32x10_impl() override {
         vslDeleteStream(&stream_);
     }
+
 private:
     VSLStreamStatePtr stream_;
 };
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue, std::uint64_t seed) {
+oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue,
+                                                            std::uint64_t seed) {
     return new philox4x32x10_impl(queue, seed);
 }
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed) {
+oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+    cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed) {
     return new philox4x32x10_impl(queue, seed);
 }
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(const oneapi::mkl::rng::detail::engine_impl& other) {
+oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+    const oneapi::mkl::rng::detail::engine_impl& other) {
     return new philox4x32x10_impl(reinterpret_cast<const philox4x32x10_impl*>(&other));
 }
 
