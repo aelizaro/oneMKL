@@ -35,158 +35,158 @@ using namespace oneapi;
 class philox4x32x10_impl : public oneapi::mkl::rng::detail::engine_impl {
 public:
     philox4x32x10_impl(cl::sycl::queue queue, std::uint64_t seed)
-            : oneapi::mkl::rng::detail::engine_impl(queue),
+            : mkl::rng::detail::engine_impl(queue),
               engine_(queue, seed) {}
 
     philox4x32x10_impl(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed)
-            : oneapi::mkl::rng::detail::engine_impl(queue),
+            : mkl::rng::detail::engine_impl(queue),
               engine_(queue, seed) {}
 
     philox4x32x10_impl(const philox4x32x10_impl* other)
-            : oneapi::mkl::rng::detail::engine_impl(*other),
+            : mkl::rng::detail::engine_impl(*other),
               engine_(other->engine_) {}
 
     // Buffers API
 
     virtual void generate(
-        const oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::standard>& distr,
+        const mkl::rng::uniform<float, mkl::rng::uniform_method::standard>& distr,
         std::int64_t n, sycl::buffer<float, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(
-        const oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::standard>& distr,
+        const mkl::rng::uniform<double, mkl::rng::uniform_method::standard>& distr,
         std::int64_t n, sycl::buffer<double, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
-    virtual void generate(const oneapi::mkl::rng::uniform<
-                              std::int32_t, oneapi::mkl::rng::uniform_method::standard>& distr,
+    virtual void generate(const mkl::rng::uniform<
+                              std::int32_t, mkl::rng::uniform_method::standard>& distr,
                           std::int64_t n, sycl::buffer<std::int32_t, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(
-        const oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::accurate>& distr,
+        const mkl::rng::uniform<float, mkl::rng::uniform_method::accurate>& distr,
         std::int64_t n, sycl::buffer<float, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(
-        const oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::accurate>& distr,
+        const mkl::rng::uniform<double, mkl::rng::uniform_method::accurate>& distr,
         std::int64_t n, sycl::buffer<double, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
-    virtual void generate(const oneapi::mkl::rng::gaussian<
-                              float, oneapi::mkl::rng::gaussian_method::box_muller2>& distr,
+    virtual void generate(const mkl::rng::gaussian<
+                              float, mkl::rng::gaussian_method::box_muller2>& distr,
                           std::int64_t n, sycl::buffer<float, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
-    virtual void generate(const oneapi::mkl::rng::gaussian<
-                              double, oneapi::mkl::rng::gaussian_method::box_muller2>& distr,
+    virtual void generate(const mkl::rng::gaussian<
+                              double, mkl::rng::gaussian_method::box_muller2>& distr,
                           std::int64_t n, sycl::buffer<double, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(
-        const oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>& distr,
+        const mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf>& distr,
         std::int64_t n, sycl::buffer<float, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(
-        const oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>& distr,
+        const mkl::rng::gaussian<double, mkl::rng::gaussian_method::icdf>& distr,
         std::int64_t n, sycl::buffer<double, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     virtual void generate(const bits<std::uint32_t>& distr, std::int64_t n,
                           cl::sycl::buffer<std::uint32_t, 1> r) override {
-        oneapi::mkl::rng::generate(distr, engine_, n, r);
+        mkl::rng::generate(distr, engine_, n, r);
     }
 
     // USM APIs
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::standard>& distr,
+        const mkl::rng::uniform<float, mkl::rng::uniform_method::standard>& distr,
         std::int64_t n, float* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::standard>& distr,
+        const mkl::rng::uniform<double, mkl::rng::uniform_method::standard>& distr,
         std::int64_t n, double* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::uniform<std::int32_t, oneapi::mkl::rng::uniform_method::standard>&
+        const mkl::rng::uniform<std::int32_t, mkl::rng::uniform_method::standard>&
             distr,
         std::int64_t n, std::int32_t* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::accurate>& distr,
+        const mkl::rng::uniform<float, mkl::rng::uniform_method::accurate>& distr,
         std::int64_t n, float* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::accurate>& distr,
+        const mkl::rng::uniform<double, mkl::rng::uniform_method::accurate>& distr,
         std::int64_t n, double* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::box_muller2>&
+        const mkl::rng::gaussian<float, mkl::rng::gaussian_method::box_muller2>&
             distr,
         std::int64_t n, float* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::box_muller2>&
+        const mkl::rng::gaussian<double, mkl::rng::gaussian_method::box_muller2>&
             distr,
         std::int64_t n, double* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>& distr,
+        const mkl::rng::gaussian<float, mkl::rng::gaussian_method::icdf>& distr,
         std::int64_t n, float* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
-        const oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>& distr,
+        const mkl::rng::gaussian<double, mkl::rng::gaussian_method::icdf>& distr,
         std::int64_t n, double* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual cl::sycl::event generate(
         const bits<std::uint32_t>& distr, std::int64_t n, std::uint32_t* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) override {
-        return oneapi::mkl::rng::generate(distr, engine_, n, r, dependencies);
+        return mkl::rng::generate(distr, engine_, n, r, dependencies);
     }
 
     virtual void skip_ahead(std::uint64_t num_to_skip) override {
-        oneapi::mkl::rng::skip_ahead(engine_, num_to_skip);
+        mkl::rng::skip_ahead(engine_, num_to_skip);
     }
 
     virtual void skip_ahead(std::initializer_list<std::uint64_t> num_to_skip) override {
-        oneapi::mkl::rng::skip_ahead(engine_, num_to_skip);
+        mkl::rng::skip_ahead(engine_, num_to_skip);
     }
 
     virtual void leapfrog(std::uint64_t idx, std::uint64_t stride) override {
@@ -197,7 +197,7 @@ public:
     virtual ~philox4x32x10_impl() override {}
 
 private:
-    oneapi::mkl::rng::philox4x32x10 engine_;
+    mkl::rng::philox4x32x10 engine_;
 };
 
 oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(sycl::queue queue, std::uint64_t seed) {
