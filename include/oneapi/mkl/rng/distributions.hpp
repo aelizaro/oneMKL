@@ -125,6 +125,47 @@ public:
     using result_type = UIntType;
 };
 
+namespace gaussian_method {
+struct icdf {};
+struct box_muller2 {};
+using by_default = box_muller2;
+} // namespace gaussian_method
+
+template <typename RealType = float, typename Method = gaussian_method::by_default>
+class gaussian {
+public:
+    static_assert(std::is_same<Method, gaussian_method::icdf>::value ||
+                      std::is_same<Method, gaussian_method::box_muller2>::value,
+                  "oneapi::mkl::rng::error distribution method is incorrect");
+
+    static_assert(std::is_same<RealType, float>::value || std::is_same<RealType, double>::value,
+                  "oneapi::mkl::rng::error distribution type is not supported");
+
+    using method_type = Method;
+    using result_type = RealType;
+
+    gaussian() : gaussian(static_cast<RealType>(0.0), static_cast<RealType>(1.0)) {}
+
+    explicit gaussian(RealType mean, RealType stddev) : mean_(mean), stddev_(stddev) {
+        if (stddev <= static_cast<RealType>(0.0)) {
+            throw oneapi::mkl::InvalidArgumentsException(
+                "stddev parameter is incorrect, stddev <= 0.0");
+        }
+    }
+
+    RealType mean() const {
+        return mean_;
+    }
+
+    RealType stddev() const {
+        return stddev_;
+    }
+
+private:
+    RealType mean_;
+    RealType stddev_;
+};
+
 } // namespace rng
 } // namespace mkl
 } // namespace oneapi

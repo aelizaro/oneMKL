@@ -1,0 +1,117 @@
+/*******************************************************************************
+* Copyright 2020 Intel Corporation
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing,
+* software distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions
+* and limitations under the License.
+*
+*
+* SPDX-License-Identifier: Apache-2.0
+*******************************************************************************/
+
+#ifndef _RNG_TEST_STATISTICS_CHECK_TEST_HPP__
+#define _RNG_TEST_STATISTICS_CHECK_TEST_HPP__
+
+#include <cstdint>
+#include <iostream>
+#include <vector>
+
+#include <CL/sycl.hpp>
+
+#include "oneapi/mkl.hpp"
+
+#include "statistics_check.hpp"
+
+#define UNIFORM_ARGS_FLOAT  -1.0f, 5.0f
+#define UNIFORM_ARGS_DOUBLE -1.0, 5.0
+#define UNIFORM_ARGS_INT    -1, 5
+
+#define GAUSSIAN_ARGS_FLOAT  -1.0f, 5.0f
+#define GAUSSIAN_ARGS_DOUBLE -1.0, 5.0
+
+template <typename Distr, typename Engine>
+class statistics_test {
+public:
+    template <typename... Args>
+    int operator()(const cl::sycl::device& dev, std::int64_t n_gen, Args... args) {
+        using Type = typename Distr::result_type;
+
+        std::vector<Type> r(n_gen);
+
+        cl::sycl::queue queue(dev, exception_handler);
+
+        try {
+            sycl::buffer<Type, 1> r_buffer(r.data(), r.size());
+#ifdef CALL_RT_API
+            Engine engine(queue, SEED);
+#else
+            auto engine = create_engine<Engine>(queue);
+#endif
+            Distr distr(args...);
+            oneapi::mkl::rng::generate(distr, engine, n_gen, r_buffer);
+        }
+        catch (sycl::exception const& e) {
+            std::cout << "Caught synchronous SYCL exception during generation:\n"
+                      << e.what() << std::endl
+                      << "OpenCL status: " << e.get_cl_code() << std::endl;
+        }
+        catch (const oneapi::mkl::UnsupportedBackendException& e) {
+            return test_skipped;
+        }
+
+        catch (const std::runtime_error& error) {
+            std::cout << "Error raised during execution:\n" << error.what() << std::endl;
+        }
+
+        return statistics<Distr>{}.check(r, Distr{ args... });
+    }
+};
+
+template <typename Distr, typename Engine>
+class statistics_usm_test {
+public:
+    template <typename... Args>
+    int operator()(const cl::sycl::device& dev, std::int64_t n_gen, Args... args) {
+        using Type = typename Distr::result_type;
+
+        cl::sycl::queue queue(dev, exception_handler);
+
+        auto ua = sycl::usm_allocator<Type, sycl::usm::alloc::shared, 64>(queue.get_context(), dev);
+        std::vector<Type, decltype(ua)> r(n_gen, ua);
+
+        try {
+#ifdef CALL_RT_API
+            Engine engine(queue, SEED);
+#else
+            auto engine = create_engine<Engine>(queue);
+#endif
+            Distr distr(args...);
+            auto event = oneapi::mkl::rng::generate(distr, engine, n_gen, r.data());
+            event.wait_and_throw();
+        }
+        catch (sycl::exception const& e) {
+            std::cout << "Caught synchronous SYCL exception during generation:\n"
+                      << e.what() << std::endl
+                      << "OpenCL status: " << e.get_cl_code() << std::endl;
+        }
+        catch (const oneapi::mkl::UnsupportedBackendException& e) {
+            return test_skipped;
+        }
+
+        catch (const std::runtime_error& error) {
+            std::cout << "Error raised during execution:\n" << error.what() << std::endl;
+        }
+
+        return statistics<Distr>{}.check(r, Distr{ args... });
+    }
+};
+
+#endif // _RNG_TEST_STATISTICS_CHECK_TEST_HPP__

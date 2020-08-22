@@ -107,7 +107,6 @@ static inline void skip_ahead(Engine& engine, std::initializer_list<std::uint64_
 //      std::uint64_t stride - largest number of computational nodes, or stride
 template <typename Engine>
 static inline void leapfrog(Engine& engine, std::uint64_t idx, std::uint64_t stride) {
-    // TO DO: add static assert for supported engines
     engine.pimpl_->leapfrog(idx, stride);
 }
 
