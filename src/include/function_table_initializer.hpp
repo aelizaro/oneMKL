@@ -101,7 +101,8 @@ private:
             std::cerr << ERROR_MSG << '\n';
             throw std::runtime_error{ "Couldn't load selected backend" };
         }
-        auto t = reinterpret_cast<function_table_t *>(::GET_FUNC(handle.get(), table_names[domain_id]));
+        auto t =
+            reinterpret_cast<function_table_t *>(::GET_FUNC(handle.get(), table_names[domain_id]));
 
         if (!t) {
             std::cerr << ERROR_MSG << '\n';

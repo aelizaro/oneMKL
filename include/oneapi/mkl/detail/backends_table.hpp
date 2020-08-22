@@ -60,7 +60,7 @@ static std::map<domain, std::map<device, std::vector<const char*>>> libraries = 
 #endif
           } } } },
 
-      { domain::rng,
+    { domain::rng,
       { { device::x86cpu,
           {
 #ifdef ENABLE_MKLCPU_BACKEND
@@ -81,10 +81,8 @@ static std::map<domain, std::map<device, std::vector<const char*>>> libraries = 
           } } } }
 };
 
-static std::map<domain, const char*> table_names = {
-    { domain::blas, "mkl_blas_table"},
-    { domain::rng, "mkl_rng_table"}
-};
+static std::map<domain, const char*> table_names = { { domain::blas, "mkl_blas_table" },
+                                                     { domain::rng, "mkl_rng_table" } };
 
 } //namespace mkl
 } //namespace oneapi
