@@ -41,11 +41,11 @@ class philox4x32x10_impl : public oneapi::mkl::rng::detail::engine_impl {
 public:
     philox4x32x10_impl(cl::sycl::queue queue, std::uint64_t seed)
             : oneapi::mkl::rng::detail::engine_impl(queue),
-              engine_(queue, seed) {}
+              engine_(queue_, seed) {}
 
     philox4x32x10_impl(cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed)
             : oneapi::mkl::rng::detail::engine_impl(queue),
-              engine_(queue, seed) {}
+              engine_(queue_, seed) {}
 
     philox4x32x10_impl(const philox4x32x10_impl* other)
             : oneapi::mkl::rng::detail::engine_impl(*other),
