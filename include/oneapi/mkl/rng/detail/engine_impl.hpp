@@ -33,7 +33,7 @@ namespace mkl {
 namespace rng {
 namespace detail {
 
-class ONEMKL_EXPORT engine_impl {
+class engine_impl {
 public:
     engine_impl(cl::sycl::queue queue) : queue_(queue) {}
 

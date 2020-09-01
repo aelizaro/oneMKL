@@ -345,17 +345,17 @@ private:
     std::int32_t state_size_;
 };
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue,
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue,
                                                             std::uint64_t seed) {
     return new philox4x32x10_impl(queue, seed);
 }
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
     cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed) {
     return new philox4x32x10_impl(queue, seed);
 }
 
-oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
+ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
     const oneapi::mkl::rng::detail::engine_impl& other) {
     return new philox4x32x10_impl(reinterpret_cast<const philox4x32x10_impl*>(&other));
 }
