@@ -30,12 +30,12 @@ class Philox4x32x10SkipAheadTests : public ::testing::TestWithParam<cl::sycl::de
 class Philox4x32x10SkipAheadExTests : public ::testing::TestWithParam<cl::sycl::device> {};
 
 TEST_P(Philox4x32x10SkipAheadTests, BinaryPrecision) {
-    skip_ahead_test<oneapi::mkl::rng::philox4x32x10> test;
+    rng_test<skip_ahead_test<oneapi::mkl::rng::philox4x32x10>> test;
     EXPECT_TRUEORSKIP((test(GetParam())));
 }
 
 TEST_P(Philox4x32x10SkipAheadExTests, BinaryPrecision) {
-    skip_ahead_ex_test<oneapi::mkl::rng::philox4x32x10> test;
+    rng_test<skip_ahead_ex_test<oneapi::mkl::rng::philox4x32x10>> test;
     EXPECT_TRUEORSKIP((test(GetParam())));
 }
 

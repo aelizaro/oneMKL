@@ -33,15 +33,10 @@
 template <typename Engine>
 class skip_ahead_test {
 public:
-    int operator()(const cl::sycl::device& dev) {
-        cl::sycl::queue queue(dev, exception_handler);
-
+    template <typename Queue>
+    void operator()(Queue queue) {
         // initialize rng objects
-#ifdef CALL_RT_API
         Engine engine(queue);
-#else
-        auto engine = create_engine<Engine>(queue);
-#endif
 
         std::vector<Engine*> engines;
 
@@ -53,11 +48,7 @@ public:
 
         // perform skip
         for (int i = 0; i < N_ENGINES; i++) {
-#ifdef CALL_RT_API
             engines.push_back(new Engine(queue));
-#else
-            engines.push_back(new Engine(create_engine<Engine>(queue)));
-#endif
             oneapi::mkl::rng::skip_ahead(*(engines[i]), i * N_PORTION);
         }
 
@@ -78,7 +69,8 @@ public:
                 std::cout << "SYCL exception during generation" << std::endl
                           << e.what() << std::endl
                           << "OpenCL status: " << e.get_cl_code() << std::endl;
-                return false;
+                status = test_failed;
+                return;
             }
         } // buffers life-time ends
 
@@ -88,24 +80,19 @@ public:
         }
 
         // validation
-        return check_equal_vector(r1, r2);
+        status = check_equal_vector(r1, r2);
     }
+
+    int status = test_passed;
 };
 
 template <typename Engine>
 class skip_ahead_ex_test {
 public:
-    int operator()(const cl::sycl::device& dev) {
-        cl::sycl::queue queue(dev, exception_handler);
-
-        // initialize rng objects
-#ifdef CALL_RT_API
+    template <typename Queue>
+    void operator()(Queue queue) {
         Engine engine1(queue);
         Engine engine2(queue);
-#else
-        auto engine1 = create_engine<Engine>(queue);
-        auto engine2 = create_engine<Engine>(queue);
-#endif
 
         oneapi::mkl::rng::bits<std::uint32_t> distr;
 
@@ -132,13 +119,16 @@ public:
                 std::cout << "SYCL exception during generation" << std::endl
                           << e.what() << std::endl
                           << "OpenCL status: " << e.get_cl_code() << std::endl;
-                return false;
+                status = test_failed;
+                return;
             }
         } // buffers life-time ends
 
         // validation
-        return check_equal_vector(r1, r2);
+        status = check_equal_vector(r1, r2);
     }
+
+    int status = test_passed;
 };
 
 #endif // _RNG_TEST_SKIP_AHEAD_TEST_HPP__

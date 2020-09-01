@@ -30,31 +30,33 @@ class GaussianBoxmullerUsmTest : public ::testing::TestWithParam<cl::sycl::devic
 class GaussianIcdfUsmTest : public ::testing::TestWithParam<cl::sycl::device> {};
 
 TEST_P(GaussianIcdfUsmTest, RealSinglePrecision) {
-    statistics_usm_test<oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>,
-                        oneapi::mkl::rng::philox4x32x10>
+    rng_test<statistics_usm_test<
+        oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>,
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_FLOAT)));
 }
 
 TEST_P(GaussianIcdfUsmTest, RealDoublePrecision) {
-    statistics_usm_test<oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>,
-                        oneapi::mkl::rng::philox4x32x10>
+    rng_test<statistics_usm_test<
+        oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>,
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_DOUBLE)));
 }
 
 TEST_P(GaussianBoxmullerUsmTest, RealSinglePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::box_muller2>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_FLOAT)));
 }
 
 TEST_P(GaussianBoxmullerUsmTest, RealDoublePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::box_muller2>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_DOUBLE)));
 }

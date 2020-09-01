@@ -30,41 +30,41 @@ class UniformStdUsmTests : public ::testing::TestWithParam<cl::sycl::device> {};
 class UniformAccurateUsmTests : public ::testing::TestWithParam<cl::sycl::device> {};
 
 TEST_P(UniformStdUsmTests, RealSinglePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::standard>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, UNIFORM_ARGS_FLOAT)));
 }
 
 TEST_P(UniformStdUsmTests, RealDoublePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::standard>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, UNIFORM_ARGS_DOUBLE)));
 }
 
 TEST_P(UniformStdUsmTests, IntegerPrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::uniform<std::int32_t, oneapi::mkl::rng::uniform_method::standard>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, UNIFORM_ARGS_INT)));
 }
 
 TEST_P(UniformAccurateUsmTests, RealSinglePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::uniform<float, oneapi::mkl::rng::uniform_method::accurate>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, UNIFORM_ARGS_FLOAT)));
 }
 
 TEST_P(UniformAccurateUsmTests, RealDoublePrecision) {
-    statistics_usm_test<
+    rng_test<statistics_usm_test<
         oneapi::mkl::rng::uniform<double, oneapi::mkl::rng::uniform_method::accurate>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, UNIFORM_ARGS_DOUBLE)));
 }

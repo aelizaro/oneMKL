@@ -75,38 +75,37 @@ static inline bool check_equal_vector(std::vector<Fp, AllocType>& r1,
     return good;
 }
 
-auto exception_handler = [](sycl::exception_list exceptions) {
-    for (std::exception_ptr const& e : exceptions) {
-        try {
-            std::rethrow_exception(e);
-        }
-        catch (sycl::exception const& e) {
-            std::cout << "Caught asynchronous SYCL exception during ASUM:\n"
-                      << e.what() << std::endl
-                      << "OpenCL status: " << e.get_cl_code() << std::endl;
-        }
-    }
-};
+template <typename Test>
+class rng_test {
+public:
+    // method to call any tests, switch between rt and ct
+    template <typename... Args>
+    int operator()(const cl::sycl::device& dev, Args... args) {
+        auto exception_handler = [](sycl::exception_list exceptions) {
+            for (std::exception_ptr const& e : exceptions) {
+                try {
+                    std::rethrow_exception(e);
+                }
+                catch (sycl::exception const& e) {
+                    std::cout << "Caught asynchronous SYCL exception during ASUM:\n"
+                              << e.what() << std::endl
+                              << "OpenCL status: " << e.get_cl_code() << std::endl;
+                }
+            }
+        };
 
-template <typename Engine>
-Engine create_engine(cl::sycl::queue& queue) {
-    if (queue.is_host() || queue.get_device().is_cpu()) {
-#ifdef ENABLE_MKLCPU_BACKEND
-        oneapi::mkl::backend_selector<oneapi::mkl::backend::mklcpu> selector(queue);
-        return std::move(Engine(selector, SEED));
+        cl::sycl::queue queue(dev, exception_handler);
+#ifdef CALL_RT_API
+        test_(queue, args...);
+#else
+        TEST_RUN_CT_SELECT(queue, test_, args...);
 #endif
+
+        return test_.status;
     }
-    if (queue.get_device().is_gpu()) {
-        unsigned int vendor_id = static_cast<unsigned int>(
-            queue.get_device().get_info<cl::sycl::info::device::vendor_id>());
-        if (vendor_id == INTEL_ID) {
-#ifdef ENABLE_MKLGPU_BACKEND
-            oneapi::mkl::backend_selector<oneapi::mkl::backend::mklgpu> selector(queue);
-            return std::move(Engine(selector, SEED));
-#endif
-        }
-    }
-    throw oneapi::mkl::UnsupportedBackendException(queue, "can't create engine");
-}
+
+protected:
+    Test test_;
+};
 
 #endif // _RNG_TEST_COMMON_HPP__

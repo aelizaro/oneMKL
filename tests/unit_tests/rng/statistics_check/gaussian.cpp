@@ -30,31 +30,33 @@ class GaussianBoxmullerTest : public ::testing::TestWithParam<cl::sycl::device> 
 class GaussianIcdfTest : public ::testing::TestWithParam<cl::sycl::device> {};
 
 TEST_P(GaussianIcdfTest, RealSinglePrecision) {
-    statistics_test<oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>,
-                    oneapi::mkl::rng::philox4x32x10>
+    rng_test<
+        statistics_test<oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::icdf>,
+                        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_FLOAT)));
 }
 
 TEST_P(GaussianIcdfTest, RealDoublePrecision) {
-    statistics_test<oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>,
-                    oneapi::mkl::rng::philox4x32x10>
+    rng_test<
+        statistics_test<oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::icdf>,
+                        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_DOUBLE)));
 }
 
 TEST_P(GaussianBoxmullerTest, RealSinglePrecision) {
-    statistics_test<
+    rng_test<statistics_test<
         oneapi::mkl::rng::gaussian<float, oneapi::mkl::rng::gaussian_method::box_muller2>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_FLOAT)));
 }
 
 TEST_P(GaussianBoxmullerTest, RealDoublePrecision) {
-    statistics_test<
+    rng_test<statistics_test<
         oneapi::mkl::rng::gaussian<double, oneapi::mkl::rng::gaussian_method::box_muller2>,
-        oneapi::mkl::rng::philox4x32x10>
+        oneapi::mkl::rng::philox4x32x10>>
         test;
     EXPECT_TRUEORSKIP((test(GetParam(), N_GEN, GAUSSIAN_ARGS_DOUBLE)));
 }

@@ -40,21 +40,16 @@
 template <typename Distr, typename Engine>
 class statistics_test {
 public:
-    template <typename... Args>
-    int operator()(const cl::sycl::device& dev, std::int64_t n_gen, Args... args) {
+    template <typename Queue, typename... Args>
+    void operator()(Queue queue, std::int64_t n_gen, Args... args) {
         using Type = typename Distr::result_type;
 
         std::vector<Type> r(n_gen);
 
-        cl::sycl::queue queue(dev, exception_handler);
-
         try {
             sycl::buffer<Type, 1> r_buffer(r.data(), r.size());
-#ifdef CALL_RT_API
+
             Engine engine(queue, SEED);
-#else
-            auto engine = create_engine<Engine>(queue);
-#endif
             Distr distr(args...);
             oneapi::mkl::rng::generate(distr, engine, n_gen, r_buffer);
         }
@@ -64,35 +59,36 @@ public:
                       << "OpenCL status: " << e.get_cl_code() << std::endl;
         }
         catch (const oneapi::mkl::UnsupportedBackendException& e) {
-            return test_skipped;
+            status = test_skipped;
+            return;
         }
 
         catch (const std::runtime_error& error) {
             std::cout << "Error raised during execution:\n" << error.what() << std::endl;
         }
 
-        return statistics<Distr>{}.check(r, Distr{ args... });
+        status = statistics<Distr>{}.check(r, Distr{ args... });
     }
+
+    int status = test_passed;
 };
 
 template <typename Distr, typename Engine>
 class statistics_usm_test {
 public:
-    template <typename... Args>
-    int operator()(const cl::sycl::device& dev, std::int64_t n_gen, Args... args) {
+    template <typename Queue, typename... Args>
+    void operator()(Queue queue, std::int64_t n_gen, Args... args) {
         using Type = typename Distr::result_type;
 
-        cl::sycl::queue queue(dev, exception_handler);
-
-        auto ua = sycl::usm_allocator<Type, sycl::usm::alloc::shared, 64>(queue.get_context(), dev);
+#ifdef CALL_RT_API
+        auto ua = sycl::usm_allocator<Type, sycl::usm::alloc::shared, 64>(queue);
+#else
+        auto ua = sycl::usm_allocator<Type, sycl::usm::alloc::shared, 64>(queue.get_queue());
+#endif
         std::vector<Type, decltype(ua)> r(n_gen, ua);
 
         try {
-#ifdef CALL_RT_API
             Engine engine(queue, SEED);
-#else
-            auto engine = create_engine<Engine>(queue);
-#endif
             Distr distr(args...);
             auto event = oneapi::mkl::rng::generate(distr, engine, n_gen, r.data());
             event.wait_and_throw();
@@ -103,15 +99,18 @@ public:
                       << "OpenCL status: " << e.get_cl_code() << std::endl;
         }
         catch (const oneapi::mkl::UnsupportedBackendException& e) {
-            return test_skipped;
+            status = test_skipped;
+            return;
         }
 
         catch (const std::runtime_error& error) {
             std::cout << "Error raised during execution:\n" << error.what() << std::endl;
         }
 
-        return statistics<Distr>{}.check(r, Distr{ args... });
+        status = statistics<Distr>{}.check(r, Distr{ args... });
     }
+
+    int status = test_passed;
 };
 
 #endif // _RNG_TEST_STATISTICS_CHECK_TEST_HPP__
