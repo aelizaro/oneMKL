@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <CL/sycl.hpp>
 
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 #include "oneapi/mkl/types.hpp"
 
 namespace oneapi {
@@ -37,7 +37,7 @@ inline void generate_precondition(const Distr& distr, Engine& engine, std::int64
                                   sycl::buffer<typename Distr::result_type, 1>& r) {
 #ifndef ONEMKL_DISABLE_PREDICATES
     if (n < 0 || n > r.get_count()) {
-        throw oneapi::mkl::InvalidArgumentsException("invalid argument n");
+        throw oneapi::mkl::invalid_argument("rng", "generate", "n");
     }
 #endif
 }
@@ -50,10 +50,10 @@ inline void generate_precondition(const Distr& distr, Engine& engine, std::int64
                                   const cl::sycl::vector_class<cl::sycl::event>& dependencies) {
 #ifndef ONEMKL_DISABLE_PREDICATES
     if (n < 0) {
-        throw oneapi::mkl::InvalidArgumentsException("invalid argument n");
+        throw oneapi::mkl::invalid_argument("rng", "generate", "n");
     }
     if (r == nullptr) {
-        throw oneapi::mkl::InvalidArgumentsException("invalid argument r");
+        throw oneapi::mkl::invalid_argument("rng", "generate", "r is nullptr");
     }
 #endif
 }

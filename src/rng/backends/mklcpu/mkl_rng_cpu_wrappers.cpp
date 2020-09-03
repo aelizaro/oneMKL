@@ -24,5 +24,5 @@
 
 extern "C" ONEMKL_EXPORT function_table_t mkl_rng_table = {
     WRAPPER_VERSION, oneapi::mkl::rng::mklcpu::create_philox4x32x10,
-    oneapi::mkl::rng::mklcpu::create_philox4x32x10, oneapi::mkl::rng::mklcpu::create_philox4x32x10
+    oneapi::mkl::rng::mklcpu::create_philox4x32x10
 };

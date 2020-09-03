@@ -23,7 +23,7 @@
 #include <cstdint>
 #include <CL/sycl.hpp>
 
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 #include "oneapi/mkl/rng/predicates.hpp"
 
 namespace oneapi {

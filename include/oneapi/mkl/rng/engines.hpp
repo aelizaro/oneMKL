@@ -25,7 +25,7 @@
 #include <memory>
 #include <CL/sycl.hpp>
 
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 #include "oneapi/mkl/detail/backend_selector.hpp"
 
 #include "oneapi/mkl/rng/detail/engine_impl.hpp"
@@ -76,8 +76,7 @@ public:
 #endif
 
     philox4x32x10(const philox4x32x10& other) {
-        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()),
-                                                  *(other.pimpl_.get())));
+        pimpl_.reset(other.pimpl_.get()->copy_state());
     }
 
     philox4x32x10(philox4x32x10&& other) {
@@ -87,8 +86,7 @@ public:
     philox4x32x10& operator=(const philox4x32x10& other) {
         if (this == &other)
             return *this;
-        pimpl_.reset(detail::create_philox4x32x10(get_device_id(other.pimpl_->get_queue()),
-                                                  *(other.pimpl_.get())));
+        pimpl_.reset(other.pimpl_.get()->copy_state());
         return *this;
     }
 

@@ -21,7 +21,7 @@
 #define _ONEMKL_BACKEND_SELECTOR_HPP_
 
 #include "oneapi/mkl/detail/backends.hpp"
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 
 namespace oneapi {
 namespace mkl {
@@ -30,12 +30,31 @@ template <backend Backend>
 class backend_selector {
 public:
     explicit backend_selector(sycl::queue queue) : queue_(queue) {
-        // TO DO: add check for queue type, like:
-        //    if constexpr(Backend == backend::mklcpu) {
-        //        if(!(queue.is_host() || queue.get_device().is_cpu())) {
-        //            throw UnsupportedBackendException(queue, "invalid queue in backend_selector");
-        //        }
-        //    }
+        if ((queue.is_host() || queue.get_device().is_cpu())) {
+            if (Backend != backend::mklcpu) {
+                throw unsupported_device("", "backend_selector", queue.get_device());
+            }
+        }
+        else if (queue.get_device().is_gpu()) {
+            unsigned int vendor_id = static_cast<unsigned int>(
+                queue.get_device().get_info<cl::sycl::info::device::vendor_id>());
+            if (vendor_id == INTEL_ID) {
+                if (Backend != backend::mklgpu) {
+                    throw unsupported_device("", "backend_selector", queue.get_device());
+                }
+            }
+            else if (vendor_id == NVIDIA_ID) {
+                if (Backend != backend::cublas) {
+                    throw unsupported_device("", "backend_selector", queue.get_device());
+                }
+            }
+            else {
+                throw unsupported_device("", "backend_selector", queue.get_device());
+            }
+        }
+        else {
+            throw unsupported_device("", "backend_selector", queue.get_device());
+        }
     }
     sycl::queue& get_queue() {
         return queue_;

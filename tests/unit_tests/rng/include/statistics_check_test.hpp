@@ -58,7 +58,7 @@ public:
                       << e.what() << std::endl
                       << "OpenCL status: " << e.get_cl_code() << std::endl;
         }
-        catch (const oneapi::mkl::UnsupportedBackendException& e) {
+        catch (const oneapi::mkl::unimplemented& e) {
             status = test_skipped;
             return;
         }
@@ -98,7 +98,7 @@ public:
                       << e.what() << std::endl
                       << "OpenCL status: " << e.get_cl_code() << std::endl;
         }
-        catch (const oneapi::mkl::UnsupportedBackendException& e) {
+        catch (const oneapi::mkl::unimplemented& e) {
             status = test_skipped;
             return;
         }

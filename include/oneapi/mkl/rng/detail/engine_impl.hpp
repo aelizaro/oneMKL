@@ -111,6 +111,8 @@ public:
         const bits<std::uint32_t>& distr, std::int64_t n, std::uint32_t* r,
         const cl::sycl::vector_class<cl::sycl::event>& dependencies) = 0;
 
+    virtual engine_impl* copy_state() = 0;
+
     virtual void skip_ahead(std::uint64_t num_to_skip) = 0;
 
     virtual void skip_ahead(std::initializer_list<std::uint64_t> num_to_skip) = 0;
@@ -123,7 +125,6 @@ public:
         return queue_;
     }
 
-protected:
     cl::sycl::queue queue_;
 };
 

@@ -24,7 +24,7 @@
 #include <limits>
 #include <CL/sycl.hpp>
 
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 
 namespace oneapi {
 namespace mkl {
@@ -59,10 +59,10 @@ public:
     static_assert(std::is_same<Method, uniform_method::standard>::value ||
                       (std::is_same<Method, uniform_method::accurate>::value &&
                        !std::is_same<Type, std::int32_t>::value),
-                  "oneapi::mkl::rng::error distribution method is incorrect");
+                  "rng uniform distribution method is incorrect");
 
     static_assert(std::is_same<Type, float>::value || std::is_same<Type, double>::value,
-                  "oneapi::mkl::rng::error distribution type is not supported");
+                  "rng uniform distribution type is not supported");
 
     using method_type = Method;
     using result_type = Type;
@@ -71,8 +71,8 @@ public:
 
     explicit uniform(Type a, Type b) : a_(a), b_(b) {
         if (a >= b) {
-            throw oneapi::mkl::InvalidArgumentsException(
-                "uniform distribution parameters are incorrect, a >= b");
+            throw oneapi::mkl::invalid_argument("rng", "uniform distribution",
+                                                "parameters are incorrect, a >= b");
         }
     }
 
@@ -99,8 +99,8 @@ public:
 
     explicit uniform(std::int32_t a, std::int32_t b) : a_(a), b_(b) {
         if (a >= b) {
-            throw oneapi::mkl::InvalidArgumentsException(
-                "uniform distribution parameters are incorrect, a >= b");
+            throw oneapi::mkl::invalid_argument("rng", "uniform distribution",
+                                                "parameters are incorrect, a >= b");
         }
     }
 
@@ -121,7 +121,7 @@ template <typename UIntType = std::uint32_t>
 class bits {
 public:
     static_assert(std::is_same<UIntType, std::uint32_t>::value,
-                  "oneapi::mkl::rng::error distribution type is not supported");
+                  "rng uniform distribution type is not supported");
     using result_type = UIntType;
 };
 
@@ -136,10 +136,10 @@ class gaussian {
 public:
     static_assert(std::is_same<Method, gaussian_method::icdf>::value ||
                       std::is_same<Method, gaussian_method::box_muller2>::value,
-                  "oneapi::mkl::rng::error distribution method is incorrect");
+                  "rng gaussian distribution method is incorrect");
 
     static_assert(std::is_same<RealType, float>::value || std::is_same<RealType, double>::value,
-                  "oneapi::mkl::rng::error distribution type is not supported");
+                  "rng gaussian distribution type is not supported");
 
     using method_type = Method;
     using result_type = RealType;
@@ -148,8 +148,8 @@ public:
 
     explicit gaussian(RealType mean, RealType stddev) : mean_(mean), stddev_(stddev) {
         if (stddev <= static_cast<RealType>(0.0)) {
-            throw oneapi::mkl::InvalidArgumentsException(
-                "stddev parameter is incorrect, stddev <= 0.0");
+            throw oneapi::mkl::invalid_argument("rng", "gaussian distribution",
+                                                "stddev parameter is incorrect, stddev <= 0.0");
         }
     }
 

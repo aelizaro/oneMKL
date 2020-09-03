@@ -22,7 +22,7 @@
 
 #include "mkl_vsl.h"
 
-#include "oneapi/mkl/detail/exceptions.hpp"
+#include "oneapi/mkl/exceptions.hpp"
 #include "oneapi/mkl/rng/detail/engine_impl.hpp"
 
 #include "cpu_common.hpp"
@@ -323,6 +323,10 @@ public:
         });
     }
 
+    virtual oneapi::mkl::rng::detail::engine_impl* copy_state() override {
+        return new philox4x32x10_impl(this);
+    }
+
     virtual void skip_ahead(std::uint64_t num_to_skip) override {
         vslSkipAheadStream(stream_, num_to_skip);
     }
@@ -332,8 +336,7 @@ public:
     }
 
     virtual void leapfrog(std::uint64_t idx, std::uint64_t stride) override {
-        throw oneapi::mkl::InvalidArgumentsException(
-            "leapfrog is not supported for philox4x32x10 engine");
+        throw oneapi::mkl::unimplemented("rng", "leapfrog");
     }
 
     virtual ~philox4x32x10_impl() override {
@@ -346,18 +349,13 @@ private:
 };
 
 ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(cl::sycl::queue queue,
-                                                            std::uint64_t seed) {
+                                                                          std::uint64_t seed) {
     return new philox4x32x10_impl(queue, seed);
 }
 
 ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
     cl::sycl::queue queue, std::initializer_list<std::uint64_t> seed) {
     return new philox4x32x10_impl(queue, seed);
-}
-
-ONEMKL_EXPORT oneapi::mkl::rng::detail::engine_impl* create_philox4x32x10(
-    const oneapi::mkl::rng::detail::engine_impl& other) {
-    return new philox4x32x10_impl(reinterpret_cast<const philox4x32x10_impl*>(&other));
 }
 
 } // namespace mklcpu

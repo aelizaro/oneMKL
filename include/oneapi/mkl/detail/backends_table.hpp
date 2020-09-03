@@ -72,12 +72,6 @@ static std::map<domain, std::map<device, std::vector<const char*>>> libraries = 
 #ifdef ENABLE_MKLGPU_BACKEND
               LIB_NAME("rng_mklgpu")
 #endif
-          } },
-        { device::nvidiagpu,
-          {
-#ifdef ENABLE_CURAND_BACKEND
-              LIB_NAME("rng_curand")
-#endif
           } } } }
 };
 

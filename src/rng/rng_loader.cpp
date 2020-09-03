@@ -39,10 +39,6 @@ engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, cl::sycl::queue qu
     return function_tables[libkey].create_philox4x32x10_ex_sycl(queue, seed);
 }
 
-engine_impl* create_philox4x32x10(oneapi::mkl::device libkey, const engine_impl& other) {
-    return function_tables[libkey].create_philox4x32x10_copy_sycl(other);
-}
-
 } // namespace detail
 } // namespace rng
 } // namespace mkl

@@ -75,7 +75,6 @@
         }                                                                      \
     } while (0);
 
-// TO DO: remove code above, rename this part
 #ifdef ENABLE_MKLCPU_BACKEND
 #define TEST_RUN_INTELCPU_SELECT(q, func, args) \
     func(oneapi::mkl::backend_selector<oneapi::mkl::backend::mklcpu>{ q }, args)
@@ -90,13 +89,6 @@
 #define TEST_RUN_INTELGPU_SELECT(q, func, args)
 #endif
 
-#ifdef ENABLE_CUBLAS_BACKEND
-#define TEST_RUN_NVIDIAGPU_SELECT(q, func, args) \
-    func(oneapi::mkl::backend_selector<oneapi::mkl::backend::cublas>{ q }, args)
-#else
-#define TEST_RUN_NVIDIAGPU_SELECT(q, func, args)
-#endif
-
 #define TEST_RUN_CT_SELECT(q, func, args)                                      \
     do {                                                                       \
         if (q.is_host() || q.get_device().is_cpu())                            \
@@ -106,8 +98,6 @@
                 q.get_device().get_info<cl::sycl::info::device::vendor_id>()); \
             if (vendor_id == INTEL_ID)                                         \
                 TEST_RUN_INTELGPU_SELECT(q, func, args);                       \
-            else if (vendor_id == NVIDIA_ID)                                   \
-                TEST_RUN_NVIDIAGPU_SELECT(q, func, args);                      \
         }                                                                      \
     } while (0);
 

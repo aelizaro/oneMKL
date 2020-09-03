@@ -18,10 +18,10 @@
 #===============================================================================
 
 # Build object from all test sources
-set(STATS_CHECK_SOURCES "skip_ahead.cpp")
+set(SERVICE_TESTS_SOURCES "skip_ahead.cpp" "engines_api_test.cpp")
 
 if(BUILD_SHARED_LIBS)
-  add_library(rng_service_rt OBJECT ${STATS_CHECK_SOURCES})
+  add_library(rng_service_rt OBJECT ${SERVICE_TESTS_SOURCES})
   target_compile_options(rng_service_rt PRIVATE -DCALL_RT_API -DNOMINMAX)
   target_include_directories(rng_service_rt
       PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include
@@ -34,7 +34,7 @@ if(BUILD_SHARED_LIBS)
   target_link_libraries(rng_service_rt PUBLIC ONEMKL::SYCL::SYCL)
 endif()
 
-add_library(rng_service_ct OBJECT ${STATS_CHECK_SOURCES})
+add_library(rng_service_ct OBJECT ${SERVICE_TESTS_SOURCES})
 target_compile_options(rng_service_ct PRIVATE -DNOMINMAX)
 target_include_directories(rng_service_ct
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include
