@@ -33,9 +33,8 @@
 template <typename Engine>
 class engines_constructors_test {
 public:
-    template <typename Queue, typename ... Args>
+    template <typename Queue, typename... Args>
     void operator()(Queue queue, Args... args) {
-        
         // initialize rng objects
         Engine engine1(queue, SEED);
         Engine engine2(queue, args...);
@@ -70,7 +69,8 @@ public:
         } // buffers life-time ends
 
         // validation
-        status = (check_equal_vector(r1, r2) && check_equal_vector(r1, r3) && check_equal_vector(r1, r4));
+        status = (check_equal_vector(r1, r2) && check_equal_vector(r1, r3) &&
+                  check_equal_vector(r1, r4));
     }
 
     int status = test_passed;
@@ -81,7 +81,6 @@ class engines_copy_test {
 public:
     template <typename Queue>
     void operator()(Queue queue) {
-        
         // initialize rng objects
         Engine engine1(queue, SEED);
         Engine engine2(engine1);

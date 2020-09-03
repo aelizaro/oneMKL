@@ -125,6 +125,7 @@ public:
         return queue_;
     }
 
+protected:
     cl::sycl::queue queue_;
 };
 

@@ -20,8 +20,9 @@
 #ifndef _ONEMKL_BACKEND_SELECTOR_HPP_
 #define _ONEMKL_BACKEND_SELECTOR_HPP_
 
-#include "oneapi/mkl/detail/backends.hpp"
 #include "oneapi/mkl/exceptions.hpp"
+#include "oneapi/mkl/detail/backends.hpp"
+#include "oneapi/mkl/detail/get_device_id.hpp"
 
 namespace oneapi {
 namespace mkl {
