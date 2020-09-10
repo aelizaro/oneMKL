@@ -51,7 +51,8 @@ set_target_properties(onemkl PROPERTIES
 target_link_libraries(onemkl PUBLIC onemkl_blas onemkl_rng)
 
 # Add the library to install package
-install(TARGETS onemkl_blas onemkl_rng EXPORT oneMKLTargets)
+install(TARGETS onemkl_blas EXPORT oneMKLTargets)
+install(TARGETS onemkl_rng EXPORT oneMKLTargets)
 install(TARGETS onemkl EXPORT oneMKLTargets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
