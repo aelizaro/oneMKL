@@ -20,8 +20,14 @@
 #ifndef _TEST_HELPER_HPP_
 #define _TEST_HELPER_HPP_
 
+#include <iostream>
+#include <string>
+#include <tuple>
 #include <gtest/gtest.h>
+
+#include "oneapi/mkl.hpp"
 #include "oneapi/mkl/detail/config.hpp"
+#include "oneapi/mkl/detail/backend_selector.hpp"
 
 #ifdef _WIN64
 #include <malloc.h>
@@ -74,6 +80,32 @@
         }                                                                      \
     } while (0);
 
+#ifdef ENABLE_MKLCPU_BACKEND
+#define TEST_RUN_INTELCPU_SELECT(q, func, args) \
+    func(oneapi::mkl::backend_selector<oneapi::mkl::backend::mklcpu>{ q }, args)
+#else
+#define TEST_RUN_INTELCPU_SELECT(q, func, args)
+#endif
+
+#ifdef ENABLE_MKLGPU_BACKEND
+#define TEST_RUN_INTELGPU_SELECT(q, func, args) \
+    func(oneapi::mkl::backend_selector<oneapi::mkl::backend::mklgpu>{ q }, args)
+#else
+#define TEST_RUN_INTELGPU_SELECT(q, func, args)
+#endif
+
+#define TEST_RUN_CT_SELECT(q, func, args)                                      \
+    do {                                                                       \
+        if (q.is_host() || q.get_device().is_cpu())                            \
+            TEST_RUN_INTELCPU_SELECT(q, func, args);                           \
+        else if (q.get_device().is_gpu()) {                                    \
+            unsigned int vendor_id = static_cast<unsigned int>(                \
+                q.get_device().get_info<cl::sycl::info::device::vendor_id>()); \
+            if (vendor_id == INTEL_ID)                                         \
+                TEST_RUN_INTELGPU_SELECT(q, func, args);                       \
+        }                                                                      \
+    } while (0);
+
 class DeviceNamePrint {
 public:
     std::string operator()(testing::TestParamInfo<cl::sycl::device> dev) const {
@@ -83,6 +115,23 @@ public:
                 dev_name[i] = '_';
         }
         return dev_name;
+    }
+};
+
+class LayoutDeviceNamePrint {
+public:
+    std::string operator()(
+        testing::TestParamInfo<std::tuple<cl::sycl::device, oneapi::mkl::layout>> dev) const {
+        std::string layout_name = std::get<1>(dev.param) == oneapi::mkl::layout::column_major
+                                      ? "Column_Major"
+                                      : "Row_Major";
+        std::string dev_name = std::get<0>(dev.param).get_info<cl::sycl::info::device::name>();
+        for (std::string::size_type i = 0; i < dev_name.size(); ++i) {
+            if (!isalnum(dev_name[i]))
+                dev_name[i] = '_';
+        }
+        std::string info_name = (layout_name.append("_")).append(dev_name);
+        return info_name;
     }
 };
 
