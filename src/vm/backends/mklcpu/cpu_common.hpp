@@ -55,8 +55,7 @@ static inline std::int64_t get_classic_mode(oneapi::mkl::vm::mode sycl_mode) {
         case oneapi::mkl::vm::mode::la: mode = VML_LA; break;
         case oneapi::mkl::vm::mode::ha: mode = VML_HA; break;
         case oneapi::mkl::vm::mode::not_defined:
-        default:
-            mode = VML_HA; break;
+        default: mode = VML_HA; break;
     }
     return mode;
 }

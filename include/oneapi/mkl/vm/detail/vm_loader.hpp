@@ -36,22 +36,62 @@ namespace vm {
 namespace detail {
 
 // Service functions
-ONEMKL_EXPORT oneapi::mkl::vm::mode get_mode(oneapi::mkl::device libkey, cl::sycl::queue & queue);
-ONEMKL_EXPORT oneapi::mkl::vm::mode set_mode(oneapi::mkl::device libkey, cl::sycl::queue & queue, oneapi::mkl::vm::mode new_mode);
+ONEMKL_EXPORT oneapi::mkl::vm::mode get_mode(oneapi::mkl::device libkey, cl::sycl::queue& queue);
+ONEMKL_EXPORT oneapi::mkl::vm::mode set_mode(oneapi::mkl::device libkey, cl::sycl::queue& queue,
+                                             oneapi::mkl::vm::mode new_mode);
 
-ONEMKL_EXPORT oneapi::mkl::vm::status get_status(oneapi::mkl::device libkey, cl::sycl::queue & queue);
-ONEMKL_EXPORT oneapi::mkl::vm::status set_status(oneapi::mkl::device libkey, cl::sycl::queue & queue, oneapi::mkl::vm::status new_status);
-ONEMKL_EXPORT oneapi::mkl::vm::status clear_status(oneapi::mkl::device libkey, cl::sycl::queue & queue);
+ONEMKL_EXPORT oneapi::mkl::vm::status get_status(oneapi::mkl::device libkey,
+                                                 cl::sycl::queue& queue);
+ONEMKL_EXPORT oneapi::mkl::vm::status set_status(oneapi::mkl::device libkey, cl::sycl::queue& queue,
+                                                 oneapi::mkl::vm::status new_status);
+ONEMKL_EXPORT oneapi::mkl::vm::status clear_status(oneapi::mkl::device libkey,
+                                                   cl::sycl::queue& queue);
 
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, cl::sycl::buffer<std::complex<float> > & a, cl::sycl::buffer<std::complex<float> > & b, cl::sycl::buffer<std::complex<float> > & y, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<std::complex<float> > eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, cl::sycl::buffer<std::complex<double> > & a, cl::sycl::buffer<std::complex<double> > & b, cl::sycl::buffer<std::complex<double> > & y, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<std::complex<double> > eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, cl::sycl::buffer<float> & a, cl::sycl::buffer<float> & b, cl::sycl::buffer<float> & y, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<float> eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, cl::sycl::buffer<double> & a, cl::sycl::buffer<double> & b, cl::sycl::buffer<double> & y, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<double> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n,
+    cl::sycl::buffer<std::complex<float>>& a, cl::sycl::buffer<std::complex<float>>& b,
+    cl::sycl::buffer<std::complex<float>>& y,
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<std::complex<float>> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n,
+    cl::sycl::buffer<std::complex<double>>& a, cl::sycl::buffer<std::complex<double>>& b,
+    cl::sycl::buffer<std::complex<double>>& y,
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<std::complex<double>> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<float>& a,
+    cl::sycl::buffer<float>& b, cl::sycl::buffer<float>& y,
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<float> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<double>& a,
+    cl::sycl::buffer<double>& b, cl::sycl::buffer<double>& y,
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<double> eh = {});
 
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, std::complex<float> * a, std::complex<float> * b, std::complex<float> * y, cl::sycl::vector_class<cl::sycl::event> const & depends = {}, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<std::complex<float> > eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, std::complex<double> * a, std::complex<double> * b, std::complex<double> * y, cl::sycl::vector_class<cl::sycl::event> const & depends = {}, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<std::complex<double> > eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, float * a, float * b, float * y, cl::sycl::vector_class<cl::sycl::event> const & depends = {}, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<float> eh = {});
-ONEMKL_EXPORT cl::sycl::event add(oneapi::mkl::device libkey, cl::sycl::queue & q, std::int64_t n, double * a, double * b, double * y, cl::sycl::vector_class<cl::sycl::event> const & depends = {}, oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined, oneapi::mkl::vm::error_handler<double> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, std::complex<float>* a,
+    std::complex<float>* b, std::complex<float>* y,
+    cl::sycl::vector_class<cl::sycl::event> const& depends = {},
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<std::complex<float>> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, std::complex<double>* a,
+    std::complex<double>* b, std::complex<double>* y,
+    cl::sycl::vector_class<cl::sycl::event> const& depends = {},
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<std::complex<double>> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, float* a, float* b, float* y,
+    cl::sycl::vector_class<cl::sycl::event> const& depends = {},
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<float> eh = {});
+ONEMKL_EXPORT cl::sycl::event add(
+    oneapi::mkl::device libkey, cl::sycl::queue& q, std::int64_t n, double* a, double* b, double* y,
+    cl::sycl::vector_class<cl::sycl::event> const& depends = {},
+    oneapi::mkl::vm::mode given_mode = oneapi::mkl::vm::mode::not_defined,
+    oneapi::mkl::vm::error_handler<double> eh = {});
 
 } //namespace detail
 } //namespace vm

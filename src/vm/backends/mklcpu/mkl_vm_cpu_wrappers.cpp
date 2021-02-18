@@ -22,21 +22,19 @@
 
 #define WRAPPER_VERSION 1
 
-extern "C" ONEMKL_EXPORT vm_function_table_t mkl_vm_table = {
-    WRAPPER_VERSION,
-    oneapi::mkl::vm::mklcpu::get_mode,
-    oneapi::mkl::vm::mklcpu::set_mode,
-    oneapi::mkl::vm::mklcpu::get_status,
-    oneapi::mkl::vm::mklcpu::set_status,
-    oneapi::mkl::vm::mklcpu::clear_status,
+extern "C" ONEMKL_EXPORT vm_function_table_t mkl_vm_table = { WRAPPER_VERSION,
+                                                              oneapi::mkl::vm::mklcpu::get_mode,
+                                                              oneapi::mkl::vm::mklcpu::set_mode,
+                                                              oneapi::mkl::vm::mklcpu::get_status,
+                                                              oneapi::mkl::vm::mklcpu::set_status,
+                                                              oneapi::mkl::vm::mklcpu::clear_status,
 
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
 
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add,
-    oneapi::mkl::vm::mklcpu::add
-};
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add,
+                                                              oneapi::mkl::vm::mklcpu::add };

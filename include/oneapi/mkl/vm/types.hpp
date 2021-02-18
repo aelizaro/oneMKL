@@ -53,83 +53,88 @@ enum class status : std::uint32_t {
 };
 
 template <typename T>
-struct bits_enabled { static constexpr bool enabled = false; };
+struct bits_enabled {
+    static constexpr bool enabled = false;
+};
 
 template <>
-struct bits_enabled<mode> { static constexpr bool enabled = true; };
+struct bits_enabled<mode> {
+    static constexpr bool enabled = true;
+};
 
 template <>
-struct bits_enabled<status> { static constexpr bool enabled = true; };
-
+struct bits_enabled<status> {
+    static constexpr bool enabled = true;
+};
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type
-operator |(T lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type> (lhs) | static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type operator|(T lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) |
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     return static_cast<T>(r);
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type &
-operator |=(T & lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) | static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type &operator|=(T &lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) |
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     lhs = static_cast<T>(r);
     return lhs;
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type
-operator &(T lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) & static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type operator&(T lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) &
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     return static_cast<T>(r);
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type
-operator &=(T & lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) & static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type operator&=(T &lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) &
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     lhs = static_cast<T>(r);
     return lhs;
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type
-operator ^(T lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) ^ static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type operator^(T lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) ^
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     return static_cast<T>(r);
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, T>::type
-operator ^=(T & lhs, T rhs) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) ^ static_cast<typename std::underlying_type<T>::type>(rhs);
+typename std::enable_if<bits_enabled<T>::enabled, T>::type operator^=(T &lhs, T rhs) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(lhs) ^
+             static_cast<typename std::underlying_type<T>::type>(rhs);
     lhs = static_cast<T>(r);
     return lhs;
 }
 
+template <typename T>
+typename std::enable_if<bits_enabled<T>::enabled, bool>::type operator!(T v) {
+    return (0 == static_cast<typename std::underlying_type<T>::type>(v));
+}
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, bool>::type
-operator !(T v) { return (0 == static_cast<typename std::underlying_type<T>::type>(v)); }
-
-template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, bool>::type
-has_any(T v, T mask) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(v) & static_cast<typename std::underlying_type<T>::type>(mask);
+typename std::enable_if<bits_enabled<T>::enabled, bool>::type has_any(T v, T mask) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(v) &
+             static_cast<typename std::underlying_type<T>::type>(mask);
     return (0 != r);
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, bool>::type
-has_all(T v, T mask) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(v) & static_cast<typename std::underlying_type<T>::type>(mask);
+typename std::enable_if<bits_enabled<T>::enabled, bool>::type has_all(T v, T mask) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(v) &
+             static_cast<typename std::underlying_type<T>::type>(mask);
     return (static_cast<typename std::underlying_type<T>::type>(mask) == r);
 }
 
 template <typename T>
-typename std::enable_if<bits_enabled<T>::enabled, bool>::type
-has_only(T v, T mask) {
-    auto r = static_cast<typename std::underlying_type<T>::type>(v) ^ static_cast<typename std::underlying_type<T>::type>(mask);
+typename std::enable_if<bits_enabled<T>::enabled, bool>::type has_only(T v, T mask) {
+    auto r = static_cast<typename std::underlying_type<T>::type>(v) ^
+             static_cast<typename std::underlying_type<T>::type>(mask);
     return (0 == r);
 }
 
@@ -148,60 +153,60 @@ struct error_handler {
     bool is_usm_;
 
     sycl::buffer<one_vm::status, 1> buf_status_;
-    one_vm::status * usm_status_;
+    one_vm::status *usm_status_;
     int64_t len_;
 
     one_vm::status status_to_fix_;
     T fixup_value_;
     bool copy_sign_;
 
-    error_handler():
-        enabled_ { false },
-        is_usm_  { false },
+    error_handler()
+            : enabled_{ false },
+              is_usm_{ false },
 
-        buf_status_ { sycl::buffer<one_vm::status, 1> { 1 } },
-        usm_status_ { nullptr },
-        len_ { 0 },
-        status_to_fix_ { one_vm::status::not_defined },
-        fixup_value_ { T {} },
-        copy_sign_ { false }
-        { }
+              buf_status_{ sycl::buffer<one_vm::status, 1>{ 1 } },
+              usm_status_{ nullptr },
+              len_{ 0 },
+              status_to_fix_{ one_vm::status::not_defined },
+              fixup_value_{ T{} },
+              copy_sign_{ false } {}
 
-    error_handler(one_vm::status status_to_fix, T fixup_value, bool copy_sign = false):
-        enabled_ { true },
-        is_usm_  { false },
+    error_handler(one_vm::status status_to_fix, T fixup_value, bool copy_sign = false)
+            : enabled_{ true },
+              is_usm_{ false },
 
-        buf_status_ { sycl::buffer<one_vm::status, 1> { 1 } },
-        usm_status_ { nullptr },
-        len_ { 0 },
-        status_to_fix_ { status_to_fix },
-        fixup_value_ { fixup_value },
-        copy_sign_ { copy_sign }
-        { }
+              buf_status_{ sycl::buffer<one_vm::status, 1>{ 1 } },
+              usm_status_{ nullptr },
+              len_{ 0 },
+              status_to_fix_{ status_to_fix },
+              fixup_value_{ fixup_value },
+              copy_sign_{ copy_sign } {}
 
-    error_handler(one_vm::status * array, std::int64_t len = 1, one_vm::status status_to_fix = one_vm::status::not_defined, T fixup_value = {}, bool copy_sign = false):
-        enabled_ { true },
-        is_usm_  { true },
+    error_handler(one_vm::status *array, std::int64_t len = 1,
+                  one_vm::status status_to_fix = one_vm::status::not_defined, T fixup_value = {},
+                  bool copy_sign = false)
+            : enabled_{ true },
+              is_usm_{ true },
 
-        buf_status_ { sycl::buffer<one_vm::status, 1> { 1 } },
-        usm_status_ { array },
-        len_ { len },
-        status_to_fix_ { status_to_fix },
-        fixup_value_ { fixup_value },
-        copy_sign_ { copy_sign }
-        { }
+              buf_status_{ sycl::buffer<one_vm::status, 1>{ 1 } },
+              usm_status_{ array },
+              len_{ len },
+              status_to_fix_{ status_to_fix },
+              fixup_value_{ fixup_value },
+              copy_sign_{ copy_sign } {}
 
-    error_handler(sycl::buffer<one_vm::status, 1> & buf, std::int64_t len = 1, one_vm::status status_to_fix = one_vm::status::not_defined, T fixup_value = {}, bool copy_sign = false):
-        enabled_ { true },
-        is_usm_  { false },
+    error_handler(sycl::buffer<one_vm::status, 1> &buf, std::int64_t len = 1,
+                  one_vm::status status_to_fix = one_vm::status::not_defined, T fixup_value = {},
+                  bool copy_sign = false)
+            : enabled_{ true },
+              is_usm_{ false },
 
-        buf_status_ { buf },
-        usm_status_ { nullptr },
-        len_ { len },
-        status_to_fix_ { status_to_fix },
-        fixup_value_ { fixup_value },
-        copy_sign_ { copy_sign }
-        { }
+              buf_status_{ buf },
+              usm_status_{ nullptr },
+              len_{ len },
+              status_to_fix_{ status_to_fix },
+              fixup_value_{ fixup_value },
+              copy_sign_{ copy_sign } {}
 
 }; // struct error_handler
 } // namespace detail
