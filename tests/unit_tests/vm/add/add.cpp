@@ -58,7 +58,7 @@ static ulp_table_type ulp_table = {
 //! @brief Accuracy test
 //!
 template <typename A, typename R>
-bool vAddAccuracyLiteTest(device* dev) {
+int vAddAccuracyLiteTest(device* dev) {
     static constexpr int ACCURACY_LEN = VLEN;
     int argtype =
 
@@ -247,29 +247,31 @@ bool vAddAccuracyLiteTest(device* dev) {
         buffer<R, 1> out1(vres1.begin(), vres1.end());
 
         // Run VM function
+        try {
 #ifdef CALL_RT_API
-        oneapi::mkl::vm::add(main_queue, varg1.size(), in1, in2, out1, accuracy_mode[acc]);
+            oneapi::mkl::vm::add(main_queue, varg1.size(), in1, in2, out1, accuracy_mode[acc]);
 #else
-        TEST_RUN_CT_SELECT(main_queue, oneapi::mkl::vm::add, varg1.size(), in1, in2, out1,
-                           accuracy_mode[acc]);
+            TEST_RUN_CT_SELECT(main_queue, oneapi::mkl::vm::add, varg1.size(), in1, in2, out1,
+                               accuracy_mode[acc]);
 #endif
 
-        // Get results from sycl buffers
-        auto host_vres1 = out1.template get_access<access::mode::read>();
+            // Get results from sycl buffers
+            auto host_vres1 = out1.template get_access<access::mode::read>();
 
-        for (int i = 0; i < vres1.size(); ++i) {
-            vres1[i] = host_vres1[i];
-        }
+            for (int i = 0; i < vres1.size(); ++i) {
+                vres1[i] = host_vres1[i];
+            }
 
-        // Catch sycl exceptions
-        try {
             main_queue.wait_and_throw();
+        }
+        catch (const oneapi::mkl::unimplemented& e) {
+            return test_skipped;
         }
         catch (exception& e) {
             std::cerr << "SYCL exception during Accuracy Test\n"
                       << e.what() << std::endl
                       << "OpenCl status: " << e.get_cl_code() << std::endl;
-            return false;
+            return test_failed;
         }
 
         // *************************************************************
@@ -287,27 +289,26 @@ bool vAddAccuracyLiteTest(device* dev) {
 
     std::cout << "\tResult: " << ((errs == 0) ? "PASS" : "FAIL") << std::endl;
 
-    return (errs == 0);
-} // template <typename A, typename R> bool vFuncAccuracyText (const device
-// &dev)
+    return (errs == 0) ? test_passed : test_failed;
+}
 
 // Wrapper to vAddAccuracyLiteTest<float, float>
-bool vAddSinglePrecisionAccuracyLiteTest(device* dev) {
+int vAddSinglePrecisionAccuracyLiteTest(device* dev) {
     return vAddAccuracyLiteTest<float, float>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<double, double>
-bool vAddDoublePrecisionAccuracyLiteTest(device* dev) {
+int vAddDoublePrecisionAccuracyLiteTest(device* dev) {
     return vAddAccuracyLiteTest<double, double>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<std::complex<float>, std::complex<float>>
-bool vAddComplexSinglePrecisionAccuracyLiteTest(device* dev) {
+int vAddComplexSinglePrecisionAccuracyLiteTest(device* dev) {
     return vAddAccuracyLiteTest<std::complex<float>, std::complex<float>>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<std::complex<double>, std::complex<double>>
-bool vAddComplexDoublePrecisionAccuracyLiteTest(device* dev) {
+int vAddComplexDoublePrecisionAccuracyLiteTest(device* dev) {
     return vAddAccuracyLiteTest<std::complex<double>, std::complex<double>>(dev);
 }
 

@@ -19,6 +19,8 @@
 
 #include <CL/sycl.hpp>
 
+#include "oneapi/mkl/exceptions.hpp"
+
 #include "oneapi/mkl/vm/detail/mklgpu/onemkl_vm_mklgpu.hpp"
 #include "mkl_internal_vm_gpu.hpp"
 
@@ -54,13 +56,23 @@ cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<std::co
                     cl::sycl::buffer<std::complex<float>>& b,
                     cl::sycl::buffer<std::complex<float>>& y, oneapi::mkl::vm::mode given_mode,
                     oneapi::mkl::vm::error_handler<std::complex<float>> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<std::complex<double>>& a,
                     cl::sycl::buffer<std::complex<double>>& b,
                     cl::sycl::buffer<std::complex<double>>& y, oneapi::mkl::vm::mode given_mode,
                     oneapi::mkl::vm::error_handler<std::complex<double>> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<float>& a,
                     cl::sycl::buffer<float>& b, cl::sycl::buffer<float>& y,
@@ -70,7 +82,12 @@ cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<float>&
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, cl::sycl::buffer<double>& a,
                     cl::sycl::buffer<double>& b, cl::sycl::buffer<double>& y,
                     oneapi::mkl::vm::mode given_mode, oneapi::mkl::vm::error_handler<double> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, std::complex<float>* a,
@@ -78,25 +95,45 @@ cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, std::complex<float>* a,
                     cl::sycl::vector_class<cl::sycl::event> const& depends,
                     oneapi::mkl::vm::mode given_mode,
                     oneapi::mkl::vm::error_handler<std::complex<float>> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, depends, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, std::complex<double>* a,
                     std::complex<double>* b, std::complex<double>* y,
                     cl::sycl::vector_class<cl::sycl::event> const& depends,
                     oneapi::mkl::vm::mode given_mode,
                     oneapi::mkl::vm::error_handler<std::complex<double>> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, depends, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, float* a, float* b, float* y,
                     cl::sycl::vector_class<cl::sycl::event> const& depends,
                     oneapi::mkl::vm::mode given_mode, oneapi::mkl::vm::error_handler<float> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, depends, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 
 cl::sycl::event add(cl::sycl::queue& q, std::int64_t n, double* a, double* b, double* y,
                     cl::sycl::vector_class<cl::sycl::event> const& depends,
                     oneapi::mkl::vm::mode given_mode, oneapi::mkl::vm::error_handler<double> eh) {
+#if !defined(_WIN64)
     return oneapi::mkl::vm::detail::add(q, n, a, b, y, depends, given_mode, eh);
+#else
+    throw oneapi::mkl::unimplemented("vm", "add");
+    return cl::sycl::event{};
+#endif
 }
 
 } // namespace mklgpu

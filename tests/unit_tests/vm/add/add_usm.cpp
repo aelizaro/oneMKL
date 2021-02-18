@@ -58,7 +58,7 @@ static ulp_table_type ulp_table = {
 //! @brief Accuracy test
 //!
 template <typename A, typename R>
-bool vAddAccuracyLiteTest(device *dev) {
+int vAddAccuracyLiteTest(device *dev) {
     static constexpr int ACCURACY_LEN = VLEN;
     int argtype =
 
@@ -244,23 +244,25 @@ bool vAddAccuracyLiteTest(device *dev) {
         }
 
         // Run VM function
-
+        try {
 #ifdef CALL_RT_API
-        oneapi::mkl::vm::add(main_queue, VLEN, varg1, varg2, vres1, no_deps, accuracy_mode[acc]);
+            oneapi::mkl::vm::add(main_queue, VLEN, varg1, varg2, vres1, no_deps,
+                                 accuracy_mode[acc]);
 #else
-        TEST_RUN_CT_SELECT(main_queue, oneapi::mkl::vm::add, VLEN, varg1, varg2, vres1, no_deps,
-                           accuracy_mode[acc]);
+            TEST_RUN_CT_SELECT(main_queue, oneapi::mkl::vm::add, VLEN, varg1, varg2, vres1, no_deps,
+                               accuracy_mode[acc]);
 #endif
 
-        // Catch sycl exceptions
-        try {
             main_queue.wait_and_throw();
+        }
+        catch (const oneapi::mkl::unimplemented &e) {
+            return test_skipped;
         }
         catch (exception &e) {
             std::cerr << "SYCL exception during Accuracy Test\n"
                       << e.what() << std::endl
                       << "OpenCl status: " << e.get_cl_code() << std::endl;
-            return false;
+            return test_failed;
         }
 
         // *************************************************************
@@ -285,27 +287,26 @@ bool vAddAccuracyLiteTest(device *dev) {
     own_free<R>(main_queue, vres1);
     own_free<R>(main_queue, vref1);
 
-    return (errs == 0);
-} // template <typename A, typename R> bool vFuncAccuracyText (const device
-// &dev)
+    return (errs == 0) ? test_passed : test_failed;
+}
 
 // Wrapper to vAddAccuracyLiteTest<float, float>
-bool vAddSinglePrecisionAccuracyLiteTest_usm(device *dev) {
+int vAddSinglePrecisionAccuracyLiteTest_usm(device *dev) {
     return vAddAccuracyLiteTest<float, float>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<double, double>
-bool vAddDoublePrecisionAccuracyLiteTest_usm(device *dev) {
+int vAddDoublePrecisionAccuracyLiteTest_usm(device *dev) {
     return vAddAccuracyLiteTest<double, double>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<std::complex<float>, std::complex<float>>
-bool vAddComplexSinglePrecisionAccuracyLiteTest_usm(device *dev) {
+int vAddComplexSinglePrecisionAccuracyLiteTest_usm(device *dev) {
     return vAddAccuracyLiteTest<std::complex<float>, std::complex<float>>(dev);
 }
 
 // Wrapper to vAddAccuracyLiteTest<std::complex<double>, std::complex<double>>
-bool vAddComplexDoublePrecisionAccuracyLiteTest_usm(device *dev) {
+int vAddComplexDoublePrecisionAccuracyLiteTest_usm(device *dev) {
     return vAddAccuracyLiteTest<std::complex<double>, std::complex<double>>(dev);
 }
 
