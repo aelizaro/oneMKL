@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2020-2021 Intel Corporation
+* Copyright 2021 Intel Corporation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,13 +17,31 @@
 * SPDX-License-Identifier: Apache-2.0
 *******************************************************************************/
 
-#ifndef _ONEMKL_HPP_
-#define _ONEMKL_HPP_
+#ifndef _ONEMKL_VM_CT_BACKENDS_HPP__
+#define _ONEMKL_VM_CT_BACKENDS_HPP__
+
+#include <CL/sycl.hpp>
+#include <complex>
+#include <cstdint>
 
 #include "oneapi/mkl/types.hpp"
+#include "oneapi/mkl/vm/types.hpp"
 
-#include "oneapi/mkl/blas.hpp"
-#include "oneapi/mkl/rng.hpp"
-#include "oneapi/mkl/vm.hpp"
+#include "oneapi/mkl/detail/backend_selector.hpp"
 
-#endif //_ONEMKL_HPP_
+namespace oneapi {
+namespace mkl {
+namespace vm {
+
+#define BACKEND mklcpu
+#include "vm_ct_backends.hxx"
+#undef BACKEND
+#define BACKEND mklgpu
+#include "vm_ct_backends.hxx"
+#undef BACKEND
+
+} //namespace vm
+} //namespace mkl
+} //namespace oneapi
+
+#endif //_ONEMKL_VM_CT_BACKENDS_HPP__

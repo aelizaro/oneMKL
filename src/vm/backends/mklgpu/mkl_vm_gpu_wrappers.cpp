@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2020-2021 Intel Corporation
+* Copyright 2021 Intel Corporation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,13 +17,26 @@
 * SPDX-License-Identifier: Apache-2.0
 *******************************************************************************/
 
-#ifndef _ONEMKL_HPP_
-#define _ONEMKL_HPP_
+#include "vm/function_table.hpp"
+#include "oneapi/mkl/vm/detail/mklgpu/onemkl_vm_mklgpu.hpp"
 
-#include "oneapi/mkl/types.hpp"
+#define WRAPPER_VERSION 1
 
-#include "oneapi/mkl/blas.hpp"
-#include "oneapi/mkl/rng.hpp"
-#include "oneapi/mkl/vm.hpp"
+extern "C" ONEMKL_EXPORT vm_function_table_t mkl_vm_table = {
+    WRAPPER_VERSION,
+    oneapi::mkl::vm::mklgpu::get_mode,
+    oneapi::mkl::vm::mklgpu::set_mode,
+    oneapi::mkl::vm::mklgpu::get_status,
+    oneapi::mkl::vm::mklgpu::set_status,
+    oneapi::mkl::vm::mklgpu::clear_status,
 
-#endif //_ONEMKL_HPP_
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add,
+
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add,
+    oneapi::mkl::vm::mklgpu::add
+};

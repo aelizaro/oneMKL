@@ -1,5 +1,5 @@
 /*******************************************************************************
-* Copyright 2020-2021 Intel Corporation
+* Copyright 2021 Intel Corporation
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,13 +17,23 @@
 * SPDX-License-Identifier: Apache-2.0
 *******************************************************************************/
 
-#ifndef _ONEMKL_HPP_
-#define _ONEMKL_HPP_
+#ifndef _ONEMKL_VM_PREDICATES_HPP_
+#define _ONEMKL_VM_PREDICATES_HPP_
 
+#include <cstdint>
+#include <CL/sycl.hpp>
+
+#include "oneapi/mkl/exceptions.hpp"
 #include "oneapi/mkl/types.hpp"
 
-#include "oneapi/mkl/blas.hpp"
-#include "oneapi/mkl/rng.hpp"
-#include "oneapi/mkl/vm.hpp"
+namespace oneapi {
+namespace mkl {
+namespace vm {
 
-#endif //_ONEMKL_HPP_
+// TO DO: add pre and post conditions
+
+} // namespace vm
+} // namespace mkl
+} // namespace oneapi
+
+#endif //_ONEMKL_VM_PREDICATES_HPP_

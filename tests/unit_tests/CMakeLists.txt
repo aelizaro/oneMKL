@@ -49,6 +49,12 @@ set(rng_TEST_LIST
 
 set(rng_TEST_LINK "")
 
+# VM config
+set(vm_TEST_LIST
+      vm_add)
+
+set(vm_TEST_LINK "")
+
 foreach(domain ${TARGET_DOMAINS})
   # Generate RT and CT test lists
   set(${domain}_TEST_LIST_RT ${${domain}_TEST_LIST})
