@@ -34,7 +34,11 @@ auto get_multi_ptr(T acc) {
 
 template <typename T, typename std::enable_if<!has_member_code_meta<T>::value>::type* = nullptr>
 auto get_multi_ptr(T acc) {
+#ifdef __HIPSYCL__
+    return acc.get_pointer();
+#else
     return acc.template get_multi_ptr<sycl::access::decorated::yes>();
+#endif
 };
 
 #endif // _RNG_EXAMPLE_HELPER_HPP__
